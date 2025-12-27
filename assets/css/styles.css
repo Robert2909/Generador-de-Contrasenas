@@ -213,6 +213,18 @@ h1 {
   font-weight: 600;
 }
 
+/* Styling for horizontal separator lines */
+.section-divider {
+  height: 1px;
+  background-color: var(--border-soft);
+  margin: 16px 0;
+  width: 100%;
+}
+
+.control-row {
+  margin-bottom: 24px;
+}
+
 .config-group {
   margin-bottom: 2rem;
 }
@@ -452,11 +464,23 @@ input[type=range]::-webkit-slider-thumb {
   opacity: 0.9;
 }
 
+/* Enable Flexbox on Right Panel to manage internal spacing */
+#resultPanel {
+  display: flex;
+  flex-direction: column;
+}
+
 /* History */
 .history-container {
   margin-top: 2rem;
   border-top: 1px solid var(--border-soft);
   padding-top: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* Crucial for scrolling inside flex */
+  overflow: hidden;
 }
 
 .history-header {
@@ -466,6 +490,7 @@ input[type=range]::-webkit-slider-thumb {
   color: var(--text-muted);
   text-transform: uppercase;
   margin-bottom: 10px;
+  flex-shrink: 0;
 }
 
 /* Scrollable List limited to approx 7 items */
@@ -473,10 +498,23 @@ input[type=range]::-webkit-slider-thumb {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 370px;
-  /* Fits about 7 items */
+  max-height: none !important;
+  flex: 1;
+  /* Fits about 6 items */
   overflow-y: auto;
   padding-right: 4px;
+}
+
+.history-empty-msg {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  opacity: 0.5;
+  min-height: 60px;
 }
 
 /* Custom Scrollbar for list */
@@ -535,35 +573,18 @@ input[type=range]::-webkit-slider-thumb {
   color: var(--text-bright);
 }
 
-/* History Copy Button */
-.history-copy-btn {
-  background: transparent;
-  border: 1px solid #444;
-  color: var(--text-muted);
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  flex-shrink: 0;
-  font-size: 0.8rem;
-}
-
-.history-copy-btn:hover {
-  background: var(--bg-hover);
-  border-color: var(--text-muted);
-  color: #fff;
-  transform: scale(1.05);
-}
-
+/* History Actions Container - Force Horizontal */
 .history-actions {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
+  /* Explicitly horizontal */
   gap: 8px;
+  /* Space between buttons */
+  align-items: center;
 }
 
+/* History Action Buttons */
+.history-copy-btn,
 .history-delete-btn {
   background: transparent;
   border: 1px solid #444;
@@ -577,6 +598,20 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   flex-shrink: 0;
+  font-size: 0.8rem;
+  /* Adjusted for icon consistency */
+}
+
+/* Specific styling for copy (inherited base) */
+.history-copy-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-muted);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Specific styling for delete */
+.history-delete-btn {
   font-size: 0.9rem;
 }
 
@@ -585,6 +620,46 @@ input[type=range]::-webkit-slider-thumb {
   border-color: var(--danger);
   color: var(--danger);
   transform: scale(1.1);
+}
+
+/* Disabled state for main action buttons during animation */
+.btn.secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  filter: grayscale(0.8);
+}
+
+/* History Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  to {
+    opacity: 0;
+    transform: translateX(10px) scale(0.95);
+    margin-top: -46px;
+    /* Collapse height (approx item height) */
+  }
+}
+
+.history-item.entering {
+  animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.history-item.leaving {
+  animation: slideOut 0.3s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  pointer-events: none;
+  /* Prevent clicks during exit */
 }
 
 /* Success Animation State (Global) */
@@ -733,7 +808,7 @@ input[type=range]::-webkit-slider-thumb {
   align-items: center !important;
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
-  padding: 4px 12px;
+  padding: 4px 8px 4px 12px;
   /* Espaciado interno cómodo */
   background: var(--bg-input);
   margin-top: 5px;
@@ -760,18 +835,20 @@ input[type=range]::-webkit-slider-thumb {
 .validator-wrapper .icon-btn {
   background: transparent;
   border: none;
-  font-size: 1.2rem;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 8px;
   color: var(--text-muted);
-  transition: color 0.2s;
+  transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  margin-left: 8px;
 }
 
 .validator-wrapper .icon-btn:hover {
   color: var(--text-bright);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* PWNED CHECKER CARDS */
@@ -804,9 +881,19 @@ input[type=range]::-webkit-slider-thumb {
   /* Active VS Code Red text */
 }
 
-.pwned-loading {
+.pwned-checking {
+  background: rgba(255, 255, 255, 0.05);
+  /* Neutral dark/grey */
+  border-color: rgba(255, 255, 255, 0.1);
   color: var(--text-muted);
+}
+
+.pwned-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-style: italic;
-  font-size: 0.85rem;
-  margin-top: 1rem;
+  font-size: 0.9rem;
+  margin: 0;
+  /* Reset margin since it's inside the flex container now */
 }

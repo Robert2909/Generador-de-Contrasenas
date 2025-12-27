@@ -40,6 +40,8 @@
               </div>
             </div>
 
+            <div class="section-divider"></div>
+
             <!-- MODO CHARACTERS -->
             <div id="configChars" class="config-group">
 
@@ -49,6 +51,8 @@
                 <div id="presetButtons" class="preset-group"></div>
                 <span id="presetDescription" class="help-text"></span>
               </div>
+
+              <div class="section-divider"></div>
 
               <!-- 2. CARACTERES A INCLUIR -->
               <div class="char-types">
@@ -67,6 +71,8 @@
                   <input type="checkbox" id="useSymbols" checked>
                 </div>
               </div>
+
+              <div class="section-divider"></div>
 
               <!-- 3. LONGITUD -->
               <div class="length-control">
@@ -97,6 +103,8 @@
                 <input type="range" id="wordCount" min="3" max="12" value="5">
               </div>
 
+              <div class="section-divider"></div>
+
               <div class="control-row">
                 <label class="field-label">Separador</label>
                 <div class="phrase-options">
@@ -107,6 +115,8 @@
                 </div>
                 <input type="hidden" id="phraseSeparator" value="-">
               </div>
+
+              <div class="section-divider"></div>
 
               <div class="control-row">
                 <label class="field-label">Opciones de Frase</label>
@@ -134,9 +144,16 @@
           <div class="config">
             <label class="field-label">Introduce una contraseña</label>
             <div class="password-output-wrapper validator-wrapper">
-              <input type="password" id="manualInput" class="password-output" placeholder="Pega o escribe aquí..."
-                autocomplete="off" spellcheck="false">
-              <button id="toggleManualVisibility" type="button" class="icon-btn">👁️</button>
+              <input type="password" id="manualInput" name="password_validator_field_ignore" class="password-output"
+                placeholder="Pega o escribe aquí..." autocomplete="new-password" spellcheck="false"
+                data-lpignore="true">
+              <button id="toggleManualVisibility" type="button" class="icon-btn" aria-label="Mostrar contraseña">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -173,8 +190,29 @@
           </div>
 
           <div class="actions">
-            <button id="copyBtn" class="btn secondary">Copiar</button>
-            <button id="qrBtn" class="btn secondary">📱 QR Móvil</button>
+            <button id="copyBtn" class="btn secondary"
+              style="display:flex; align-items:center; justify-content:center; gap:8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Copiar
+            </button>
+            <button id="qrBtn" class="btn secondary"
+              style="display:flex; align-items:center; justify-content:center; gap:8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <path d="M14 14h4v4h-4z"></path>
+                <path d="M14 19h2v2h-2z"></path>
+                <path d="M19 14h2v2h-2z"></path>
+                <path d="M18 18h3v3h-3z"></path>
+              </svg>
+              Generar QR
+            </button>
           </div>
 
           <div class="meta strength-dashboard">
