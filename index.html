@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Contraseñas | Seguro & Privado</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="theme-color" content="#121212">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+
+  <main class="app">
+    <!-- Contenedor Flex para Split View -->
+    <div class="split-layout">
+
+      <!-- PANEL IZQUIERDO: CONFIGURACIÓN -->
+      <section class="panel config-panel">
+        <header class="header">
+          <h1>Generador de Contraseñas</h1>
+          <p class="subtitle">Contraseñas robustas generadas localmente en tu navegador.</p>
+        </header>
+
+        <div class="tabs">
+          <button id="tabGenerator" class="tab-btn active">Generador</button>
+          <button id="tabValidator" class="tab-btn">Validar fuerza</button>
+        </div>
+
+        <!-- VIEW: GENERATOR -->
+        <div id="viewGenerator" class="view-section">
+
+          <div class="config">
+            <!-- Modos -->
+            <div class="mode-selector-container">
+              <div class="mode-selector">
+                <button class="mode-btn active" data-mode="chars">Caracteres</button>
+                <button class="mode-btn" data-mode="phrase">Frase (XKCD)</button>
+              </div>
+            </div>
+
+            <!-- MODO CHARACTERS -->
+            <div id="configChars" class="config-group">
+
+              <!-- 1. PERFILES DE SEGURIDAD -->
+              <div class="presets">
+                <label class="field-label">Perfil de Seguridad</label>
+                <div id="presetButtons" class="preset-group"></div>
+                <span id="presetDescription" class="help-text"></span>
+              </div>
+
+              <!-- 2. CARACTERES A INCLUIR -->
+              <div class="char-types">
+                <label class="field-label">Caracteres a Incluir</label>
+                <div id="charTypeButtons" class="char-type-group">
+                  <button type="button" class="char-btn" data-type="lower">Minúsculas (abc)</button>
+                  <button type="button" class="char-btn" data-type="upper">Mayúsculas (ABC)</button>
+                  <button type="button" class="char-btn" data-type="numbers">Números (123)</button>
+                  <button type="button" class="char-btn" data-type="symbols">Símbolos (@#$)</button>
+                </div>
+                <!-- Hidden checkboxes logic -->
+                <div class="hidden-inputs">
+                  <input type="checkbox" id="useLower" checked>
+                  <input type="checkbox" id="useUpper" checked>
+                  <input type="checkbox" id="useNumbers" checked>
+                  <input type="checkbox" id="useSymbols" checked>
+                </div>
+              </div>
+
+              <!-- 3. LONGITUD -->
+              <div class="length-control">
+                <div class="length-header">
+                  <label for="length" class="field-label">Longitud</label>
+                  <span id="lengthValue">16 caracteres</span>
+                </div>
+                <input type="range" id="length" min="4" max="64" value="16">
+                <!-- Botones rápidos -->
+                <div id="lengthQuick" class="length-quick">
+                  <button class="length-btn" data-length="8">8</button>
+                  <button class="length-btn" data-length="16">16</button>
+                  <button class="length-btn" data-length="32">32</button>
+                  <button class="length-btn" data-length="64">64</button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- MODO PHRASE -->
+            <div id="configPhrase" class="config-group hidden">
+              <div class="control-row">
+                <label class="field-label">Número de Palabras</label>
+                <div class="length-header unselectable">
+                  <span id="wordCountValue"
+                    style="color:var(--accent); font-weight:bold; font-family:var(--font-mono);">5 palabras</span>
+                </div>
+                <input type="range" id="wordCount" min="3" max="12" value="5">
+              </div>
+
+              <div class="control-row">
+                <label class="field-label">Separador</label>
+                <div class="phrase-options">
+                  <button class="sep-btn active" data-sep="-">Guión (-)</button>
+                  <button class="sep-btn" data-sep=".">Punto (.)</button>
+                  <button class="sep-btn" data-sep=" ">Espacio</button>
+                  <button class="sep-btn" data-sep="_">Bajo (_)</button>
+                </div>
+                <input type="hidden" id="phraseSeparator" value="-">
+              </div>
+
+              <div class="control-row">
+                <label class="field-label">Opciones de Frase</label>
+                <div id="phraseOptionsButtons" class="phrase-options">
+                  <button type="button" class="char-btn active" data-toggle="capitalize">Capitalizar</button>
+                  <button type="button" class="char-btn active" data-toggle="number">Incluir Número</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. BOTÓN GENERAR -->
+            <button id="generateBtn" class="btn primary">
+              GENERAR CONTRASEÑA
+            </button>
+          </div>
+        </div>
+
+        <!-- VIEW: VALIDATOR (Se queda en panel izquierdo o se mueve? Por ahora aquí) -->
+        <div id="viewValidator" class="view-section hidden">
+          <p class="subtitle" style="text-align:center; margin-bottom:20px;">
+            Evalúa la resistencia real de tus contraseñas actuales. <br>
+            <small style="opacity:0.7">Análisis local y privado.</small>
+          </p>
+
+          <div class="config">
+            <label class="field-label">Introduce una contraseña</label>
+            <div class="password-output-wrapper validator-wrapper">
+              <input type="password" id="manualInput" class="password-output" placeholder="Pega o escribe aquí..."
+                autocomplete="off" spellcheck="false">
+              <button id="toggleManualVisibility" type="button" class="icon-btn">👁️</button>
+            </div>
+          </div>
+
+          <!-- Resultados Validador (Mantenidos inline por simplicidad lógica actual) -->
+          <div id="validatorResult" class="meta strength-dashboard hidden" style="margin-top: 20px; border-top: none;">
+            <div class="crack-time-display">
+              <span class="crack-label">Tiempo estimado para hackear:</span>
+              <span id="valCrackTime" class="crack-value">--</span>
+            </div>
+
+            <div class="strength">
+              <div class="strength-bar">
+                <div id="valStrengthBar" class="strength-bar-fill"></div>
+              </div>
+              <div class="strength-info">
+                <span id="valStrengthLabel" class="strength-value mono">--</span>
+                <span id="valEntropy" class="entropy-badge mono">0 bits</span>
+              </div>
+            </div>
+
+            <div id="valFeedback" class="requirements mono"></div>
+            <div id="pwnedStatus" class="pwned-status hidden"></div>
+          </div>
+        </div>
+      </section> <!-- Fin Panel Izquierdo -->
+
+      <!-- PANEL DERECHO: RESULTADOS Y SERVICIOS -->
+      <section id="resultPanel" class="panel result-panel hidden">
+        <h2 class="panel-title">Contraseña Generada</h2>
+        <!-- Tarjeta de Resultado -->
+        <div id="resultCard" class="result-content hidden-start">
+          <div class="password-output-wrapper">
+            <input type="text" id="passwordOutput" class="password-output" readonly spellcheck="false">
+          </div>
+
+          <div class="actions">
+            <button id="copyBtn" class="btn secondary">Copiar</button>
+            <button id="qrBtn" class="btn secondary">📱 QR Móvil</button>
+          </div>
+
+          <div class="meta strength-dashboard">
+            <div class="crack-time-display">
+              <span class="crack-label">Tiempo estimado para hackear:</span>
+              <span id="crackTimeValue" class="crack-value">--</span>
+            </div>
+
+            <div class="strength">
+              <div class="strength-bar">
+                <div id="strengthBarFill" class="strength-bar-fill"></div>
+              </div>
+              <div class="strength-info">
+                <span id="strengthLabel" class="strength-value mono">--</span>
+                <span id="entropyValue" class="entropy-badge mono">0 bits</span>
+              </div>
+            </div>
+
+            <div id="requirementsText" class="requirements mono"></div>
+          </div>
+        </div>
+
+        <!-- HISTORIAL -->
+        <div id="historySection" class="history-container hidden">
+          <div class="history-header">
+            <h3>Historial Reciente</h3>
+            <button id="clearHistoryBtn" class="link-btn">Borrar</button>
+          </div>
+          <div id="historyList" class="history-list"></div>
+        </div>
+      </section>
+
+    </div> <!-- Fin Split Layout -->
+
+    <div id="errorBox" class="alert alert-error hidden"></div>
+    <div id="copyStatus" class="alert alert-success hidden"></div>
+  </main>
+
+  <!-- QR Modal (Isolated) -->
+  <div id="qrOverlay" class="qr-overlay">
+    <div class="qr-modal">
+      <h3 class="qr-title">Escanear con el Móvil</h3>
+      <div id="qrCodeContainer" class="qr-canvas-container"></div>
+      <button id="closeQrBtn" class="qr-close-btn">Cerrar</button>
+    </div>
+  </div>
+
+  <script src="assets/js/qrcode.js"></script>
+  <script src="assets/js/wordlist.js"></script>
+  <script src="assets/js/pwnedChecker.js"></script>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/passwordGenerator.js"></script>
+  <script src="assets/js/validators.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+
+</html>

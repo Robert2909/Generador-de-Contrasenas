@@ -1,0 +1,812 @@
+/*
+ * VS Code Dark Theme - Exact Replica
+ */
+
+:root {
+  --bg-deep: #121212;
+  --bg-panel: #1e1e1e;
+  --bg-input: #252526;
+  --bg-button: #2d2d2d;
+  --bg-hover: #37373d;
+
+  --accent: #007acc;
+  --accent-hover: #005f9e;
+
+  --text-main: #d4d4d4;
+  --text-muted: #858585;
+  --text-bright: #ffffff;
+
+  --border-soft: #333333;
+  --border-focus: #007acc;
+
+  --success: #4ec9b0;
+  --danger: #f48771;
+  --warning: #cca700;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Inter, system-ui, sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+
+  /* Global Dark Scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #444 var(--bg-deep);
+}
+
+/* Webkit Scrollbar Logic */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 5px;
+  border: 2px solid var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Accessible Focus Rings */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.app {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.split-layout {
+  display: flex;
+  gap: 2rem;
+  /* Increased gap between panels */
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  /* Centers panels */
+}
+
+/* ----------------
+   PANELS & LAYOUT
+   ---------------- */
+.panel {
+  flex: 1;
+  min-width: 320px;
+  max-width: 480px;
+  /* Limits width constraint */
+  background: var(--bg-panel);
+  padding: 2rem;
+  /* More internal breathing room */
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  /* The signature VS Code top border */
+  border-top: 3px solid var(--accent);
+  position: relative;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  color: var(--text-bright);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.unselectable {
+  user-select: none;
+}
+
+/* ----------------
+   TABS
+   ---------------- */
+.tabs {
+  display: flex;
+  background: var(--bg-input);
+  padding: 5px;
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  padding: 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.tab-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+  background: #333;
+  color: var(--text-bright);
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ----------------
+   CONTROLS
+   ---------------- */
+.field-label {
+  display: block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  /* More space below labels */
+  font-weight: 600;
+}
+
+.mode-selector-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.mode-selector {
+  display: flex;
+  background: var(--bg-input);
+  border-radius: 20px;
+  padding: 4px;
+}
+
+.mode-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  padding: 6px 18px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-btn.active {
+  background: #444;
+  color: #fff;
+  font-weight: 600;
+}
+
+.config-group {
+  margin-bottom: 2rem;
+}
+
+/* Unified vertical spacing for ALL control blocks in both views */
+.control-row,
+.presets,
+.char-types,
+.length-control {
+  margin-bottom: 2.5rem;
+  /* Consistent breathing room */
+}
+
+/* Major section spacing */
+
+.preset-group,
+.char-type-group,
+.length-quick,
+.phrase-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+/* Helper text spacing */
+.help-text {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+  opacity: 0.8;
+}
+
+/* Option Buttons & Toggles */
+.char-btn,
+.preset-btn,
+.length-btn,
+.sep-btn {
+  background: var(--bg-button);
+  color: var(--text-main);
+  border: 1px solid transparent;
+  padding: 10px 14px;
+  /* Larger click targets */
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  flex-grow: 1;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.char-btn:hover,
+.preset-btn:hover {
+  background: var(--bg-hover);
+}
+
+.char-btn.active,
+.preset-btn.active,
+.length-btn.active,
+.sep-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Hidden elements */
+.hidden-inputs {
+  display: none;
+}
+
+/* Sliders */
+input[type=range] {
+  width: 100%;
+  height: 4px;
+  background: #444;
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 2px solid var(--bg-panel);
+}
+
+.length-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+#lengthValue {
+  color: var(--accent);
+  font-family: 'Consolas', monospace;
+  font-weight: bold;
+}
+
+/* ----------------
+   MAIN BUTTONS
+   ---------------- */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: transform 0.1s, background 0.2s;
+}
+
+.btn.primary {
+  background-color: var(--accent);
+  color: white;
+  margin-top: 2rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.btn.primary:hover {
+  background-color: var(--accent-hover);
+}
+
+.btn.primary:active {
+  transform: translateY(1px);
+}
+
+.btn.secondary {
+  background: var(--bg-button);
+  color: var(--text-main);
+  border: 1px solid var(--border-soft);
+  text-transform: none;
+  font-weight: normal;
+}
+
+.btn.secondary:hover {
+  background: var(--bg-hover);
+  color: white;
+  border-color: #555;
+}
+
+/* ----------------
+   OUTPUT & RESULT
+   ---------------- */
+.panel-title {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-bright);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.password-output-wrapper {
+  background: transparent;
+  margin-bottom: 1rem;
+}
+
+.password-output {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-bright);
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 1.8rem;
+  text-align: center;
+  padding: 10px 0;
+  outline: none;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+
+/* Strength Meter */
+.meta {
+  border-top: 1px solid var(--border-soft);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.crack-time-display {
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+  color: var(--text-bright);
+  font-weight: 600;
+}
+
+.crack-label {
+  font-size: 0.7rem;
+  display: block;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.strength-bar {
+  height: 6px;
+  background: #333;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.strength-bar-fill {
+  height: 100%;
+  width: 0%;
+  transition: width 0.4s ease, background-color 0.4s;
+}
+
+.strength-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.mono {
+  font-family: 'Consolas', monospace;
+}
+
+.requirements {
+  font-size: 0.8rem;
+  color: var(--danger);
+  margin-top: 10px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+/* History */
+.history-container {
+  margin-top: 2rem;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 1rem;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* Scrollable List limited to approx 7 items */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 370px;
+  /* Fits about 7 items */
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Custom Scrollbar for list */
+.history-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 3px;
+}
+
+.history-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-input);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-family: 'Consolas', monospace;
+  font-size: 0.9rem;
+  color: #ccc;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.history-item:hover {
+  background: #333;
+  border-color: #444;
+  color: white;
+}
+
+.history-pass {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 12px;
+  opacity: 0.9;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.75rem;
+  text-decoration: underline;
+}
+
+.link-btn:hover {
+  color: var(--text-bright);
+}
+
+/* History Copy Button */
+.history-copy-btn {
+  background: transparent;
+  border: 1px solid #444;
+  color: var(--text-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+
+.history-copy-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-muted);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.history-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.history-delete-btn {
+  background: transparent;
+  border: 1px solid #444;
+  color: var(--text-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+
+.history-delete-btn:hover {
+  background: rgba(244, 135, 113, 0.2);
+  border-color: var(--danger);
+  color: var(--danger);
+  transform: scale(1.1);
+}
+
+/* Success Animation State (Global) */
+.btn-success,
+.history-copy-btn.success,
+.btn.success {
+  background: var(--success) !important;
+  border-color: var(--success) !important;
+  color: #1e1e1e !important;
+  /* Dark text for contrast */
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(78, 201, 176, 0.6);
+  font-weight: 700;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ----------------
+   ALERTS
+   ---------------- */
+.alert {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 4px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alert-error {
+  background: #d73a49;
+}
+
+.alert-success {
+  background: #28a745;
+}
+
+.alert-ninja {
+  background: #1e1e1e;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+/* ----------------
+   QR MODAL (New UX)
+   ---------------- */
+.qr-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.qr-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.qr-modal {
+  background: var(--bg-panel);
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  border-top: 3px solid var(--accent);
+  text-align: center;
+  width: 340px;
+  transform: scale(0.95);
+  transition: transform 0.2s;
+}
+
+.qr-overlay.visible .qr-modal {
+  transform: scale(1);
+}
+
+.qr-title {
+  margin-bottom: 1.5rem;
+  color: var(--text-bright);
+  font-weight: 500;
+}
+
+.qr-canvas-container {
+  background: white;
+  padding: 10px;
+  /* Reduced internal padding, margin handles Quiet Zone in canvas */
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+
+.qr-canvas-container img,
+.qr-canvas-container canvas {
+  display: block;
+  max-width: 100%;
+}
+
+.qr-close-btn {
+  background: var(--bg-button);
+  color: var(--text-main);
+  border: 1px solid var(--border-soft);
+  padding: 8px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.qr-close-btn:hover {
+  background: var(--bg-hover);
+  color: white;
+  border-color: #666;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .split-layout {
+    flex-direction: column;
+  }
+
+  .panel {
+    width: 100%;
+  }
+}
+
+/* 
+   VALIDATOR SECTION FIXES 
+*/
+.validator-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 4px 12px;
+  /* Espaciado interno cómodo */
+  background: var(--bg-input);
+  margin-top: 5px;
+  transition: border-color 0.2s;
+}
+
+.validator-wrapper:focus-within {
+  border-color: var(--accent);
+}
+
+.validator-wrapper input.password-output {
+  flex: 1;
+  /* Ocupa todo el espacio disponible */
+  border: none;
+  background: transparent;
+  text-align: left;
+  /* Escribir de izquierda a derecha natural */
+  font-size: 1.1rem;
+  padding: 8px 0;
+  width: auto;
+  /* Reset width overrides */
+}
+
+.validator-wrapper .icon-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  color: var(--text-muted);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.validator-wrapper .icon-btn:hover {
+  color: var(--text-bright);
+}
+
+/* PWNED CHECKER CARDS */
+.pwned-status {
+  margin-top: 1.5rem;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.4;
+  border: 1px solid transparent;
+  /* Border base */
+  transition: all 0.3s ease;
+}
+
+.pwned-safe {
+  background: rgba(78, 201, 176, 0.1);
+  border-color: rgba(78, 201, 176, 0.3);
+  color: #4ec9b0;
+  /* Active VS Code Cyan/Green text */
+}
+
+.pwned-danger {
+  background: rgba(244, 135, 113, 0.15);
+  /* Slightly darker bg for alarm */
+  border-color: rgba(244, 135, 113, 0.4);
+  color: #f48771;
+  /* Active VS Code Red text */
+}
+
+.pwned-loading {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
