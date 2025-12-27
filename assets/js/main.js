@@ -296,27 +296,75 @@ document.addEventListener("DOMContentLoaded", () => {
       let history = loadHistory();
       if (history.length > 0 && history[0] === password) return;
       history.unshift(password); if (history.length > 20) history.pop();
-      localStorage.setItem("pg_history", JSON.stringify(history)); renderHistory();
+      localStorage.setItem("pg_history", JSON.stringify(history));
+      renderHistory();
+
+      // Animation for new item
+      const firstItem = historyList.firstElementChild;
+      if (firstItem && !firstItem.classList.contains("history-empty-msg")) {
+        firstItem.classList.add("entering");
+      }
     } catch (e) { }
   }
 
   function deleteFromHistory(index) {
-    let history = loadHistory();
-    history.splice(index, 1);
-    localStorage.setItem("pg_history", JSON.stringify(history));
-    playSound('delete');
-    renderHistory();
+    // Find the actual DOM element to animate out
+    const items = historyList.querySelectorAll(".history-item");
+    if (items[index]) {
+      items[index].classList.add("leaving");
+      // Wait for animation to finish before removing from data and re-rendering
+      setTimeout(() => {
+        let history = loadHistory();
+        history.splice(index, 1);
+        localStorage.setItem("pg_history", JSON.stringify(history));
+        playSound('delete');
+        renderHistory();
+      }, 300); // Matches CSS animation duration
+    } else {
+      // Fallback if DOM out of sync
+      let history = loadHistory();
+      history.splice(index, 1);
+      localStorage.setItem("pg_history", JSON.stringify(history));
+      renderHistory();
+    }
   }
 
   function clearHistory() {
-    localStorage.removeItem("pg_history");
+    const items = historyList.querySelectorAll('.history-item');
+    if (items.length === 0) return;
+
+    // Play sound immediately
     playSound('delete');
-    renderHistory();
+
+    // Staggered animation for each item
+    items.forEach((item, index) => {
+      item.style.animationDelay = `${index * 0.05}s`; // Fast stagger effect
+      item.classList.add('leaving');
+    });
+
+    // Wait for all animations to complete + buffer
+    const totalDuration = 300 + (items.length * 50);
+
+    setTimeout(() => {
+      localStorage.removeItem("pg_history");
+      renderHistory();
+    }, Math.min(totalDuration, 2000)); // Cap wait time so it doesn't feel sluggish if list is huge
   }
   function renderHistory() {
     const history = loadHistory();
-    if (history.length === 0) { historySection.classList.add("hidden"); historyList.innerHTML = ""; return; }
-    historySection.classList.remove("hidden"); historyList.innerHTML = "";
+    historySection.classList.remove("hidden");
+    historyList.innerHTML = "";
+
+    if (history.length === 0) {
+      historyList.innerHTML = '<div class="history-empty-msg">Sin historial reciente</div>';
+      clearHistoryBtn.classList.add("hidden");
+      // Force layout check in case transition from populated to empty
+      requestAnimationFrame(() => {
+        if (typeof adjustHistoryListHeight === 'function') adjustHistoryListHeight();
+      });
+      return;
+    }
+    clearHistoryBtn.classList.remove("hidden");
 
     history.forEach((pwd, index) => {
       const item = document.createElement("div"); item.className = "history-item";
@@ -376,8 +424,15 @@ document.addEventListener("DOMContentLoaded", () => {
   tabValidator.addEventListener("click", () => switchTab("validator"));
 
   toggleManualVisibility.addEventListener("click", () => {
-    if (manualInput.type === "text") { manualInput.type = "password"; toggleManualVisibility.textContent = "👁️‍🗨️"; }
-    else { manualInput.type = "text"; toggleManualVisibility.textContent = "👁️"; }
+    const isPass = manualInput.type === "password";
+    manualInput.type = isPass ? "text" : "password";
+
+    // SVG Icons
+    const eyeOpen = `<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+    const eyeClosed = `<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+    toggleManualVisibility.innerHTML = isPass ? eyeClosed : eyeOpen;
+    toggleManualVisibility.setAttribute("aria-label", isPass ? "Ocultar contraseña" : "Mostrar contraseña");
   });
 
   // PWNED CHECKER LOGIC
@@ -396,7 +451,8 @@ document.addEventListener("DOMContentLoaded", () => {
     valEntropy.textContent = `${result.entropy} bits`; valFeedback.textContent = result.feedback; valFeedback.style.color = result.color;
 
     if (pwd.length >= 4) {
-      pwnedStatus.innerHTML = `<span class="pwned-loading">Verificando filtraciones...</span>`;
+      pwnedStatus.className = "pwned-status pwned-checking";
+      pwnedStatus.innerHTML = `<span class="pwned-loading"><span style="font-size:1.4em; flex-shrink:0;">🔎</span><div><strong>Un momento</strong><br> Verificando filtraciones...</div>`;
       pwnedStatus.classList.remove("hidden");
       pwnedTimeout = setTimeout(async () => {
         const count = await PwnedChecker.check(pwd);
@@ -407,10 +463,10 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (count > 0) {
           pwnedStatus.className = "pwned-status pwned-danger";
           const s = count === 1 ? "" : "s";
-          pwnedStatus.innerHTML = `<span style="font-size:1.4em; flex-shrink:0;">🚨</span> <div><strong>¡Cuidado!</strong> Esta contraseña aparece en <strong>${count.toLocaleString()}</strong> filtración${s}.</div>`;
+          pwnedStatus.innerHTML = `<span style="font-size:1.4em; flex-shrink:0;">🚨</span> <div><strong>¡Cuidado!</strong><br> Esta contraseña aparece en <strong>${count.toLocaleString()}</strong> filtraciones.</div>`;
         } else {
           pwnedStatus.className = "pwned-status pwned-safe";
-          pwnedStatus.innerHTML = `<span style="font-size:1.4em; flex-shrink:0;">🛡️</span> <div><strong>Segura:</strong> No aparece en filtraciones conocidas.</div>`;
+          pwnedStatus.innerHTML = `<span style="font-size:1.4em; flex-shrink:0;">🛡️</span> <div><strong>¡Segura!</strong><br> No aparece en filtraciones conocidas.</div>`;
         }
       }, 600);
     }
@@ -471,6 +527,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateStrengthUI(password) {
     if (!password) { return; }
+    // Make sure it's visible (in case it was hidden during anim)
+    document.querySelector('.meta.strength-dashboard').style.opacity = '1';
+
     const result = evaluatePassword(password);
     strengthLabel.textContent = result.label; strengthLabel.style.color = result.color;
     strengthBarFill.style.width = `${result.percent}%`; strengthBarFill.style.backgroundColor = result.color; strengthBarFill.style.boxShadow = `0 0 10px ${result.color}`;
@@ -490,8 +549,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // SHOW RIGHT PANEL
       resultPanel.classList.remove("hidden");
+      // Initially hide the result card details or disable them until animation finishes
+      // Actually per request: Disable buttons while animation runs.
+
+      // Hide strength details during animation
+      const metaDashboard = document.querySelector('.meta.strength-dashboard');
+      if (metaDashboard) {
+        metaDashboard.style.opacity = '0.3'; // Dimmed
+        metaDashboard.style.transition = 'opacity 0.2s';
+      }
 
       copyBtn.disabled = true;
+      if (qrBtn) qrBtn.disabled = true;
+
       const animate = (currentTime) => {
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
@@ -504,7 +574,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         passwordOutput.value = displayed;
         if (progress < 1) requestAnimationFrame(animate);
-        else { passwordOutput.value = password; updateStrengthUI(password); copyBtn.disabled = false; }
+        else {
+          passwordOutput.value = password;
+          updateStrengthUI(password);
+          copyBtn.disabled = false;
+          if (qrBtn) qrBtn.disabled = false;
+        }
       };
       requestAnimationFrame(animate);
     } catch (err) { console.error(err); showError(err.message); }
@@ -789,5 +864,49 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.key === "Escape" && qrOverlay.classList.contains("visible")) closeQR();
     });
   }
+
+  /* ----------------------
+   *   DYNAMIC LAYOUT ADJUSTMENT
+   * ---------------------- */
+  /* ----------------------
+   *   DYNAMIC LAYOUT ADJUSTMENT
+   * ---------------------- */
+  const configPanel = document.querySelector(".config-panel");
+
+  function adjustHistoryListHeight() {
+    if (!configPanel || !resultPanel) return;
+
+    // Only adjust if desktop layout (split view)
+    if (window.innerWidth <= 700) {
+      // Revert to CSS default (unconstrained height)
+      resultPanel.style.height = "";
+      return;
+    }
+
+    // If result panel is hidden, we can't sync content, but we can reset
+    if (resultPanel.classList.contains("hidden")) return;
+
+    const leftHeight = configPanel.getBoundingClientRect().height;
+    // Sync heights directly. Flexbox handles the internal distribution.
+    resultPanel.style.height = `${leftHeight}px`;
+  }
+
+  // 1. Observe size changes in the left panel (e.g. expanding options)
+  const resizeObserver = new ResizeObserver(() => {
+    requestAnimationFrame(adjustHistoryListHeight);
+  });
+  if (configPanel) resizeObserver.observe(configPanel);
+
+  // 2. Listen for window resize
+  window.addEventListener("resize", adjustHistoryListHeight);
+
+  // 3. Trigger when visibility changes
+  const resultObserver = new MutationObserver(() => {
+    requestAnimationFrame(adjustHistoryListHeight);
+  });
+  if (resultPanel) resultObserver.observe(resultPanel, { attributes: true, attributeFilter: ['class'] });
+
+  // 4. Also hook manual triggers to be safe (Initial Load)
+  setTimeout(adjustHistoryListHeight, 100);
 
 });

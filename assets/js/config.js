@@ -14,7 +14,7 @@ const CHAR_SETS = {
 /** Longitudes por defecto y límites del slider */
 const DEFAULT_MIN_LENGTH = 4;
 const DEFAULT_MAX_LENGTH = 64;
-const DEFAULT_LENGTH = 16;
+const DEFAULT_LENGTH = 64;
 
 /**
  * Perfiles de seguridad optimizados para casos de uso reales.
@@ -23,9 +23,9 @@ const SECURITY_PRESETS = [
   {
     id: "ultra",
     label: "Ultra Segura",
-    description: "Extrema (32 chars). Para bancos, emails y gestores de claves.",
+    description: "Extrema (64 chars). Todo al máximo.",
     options: {
-      length: 32,
+      length: 64,
       useLower: true,
       useUpper: true,
       useNumbers: true,
@@ -35,9 +35,9 @@ const SECURITY_PRESETS = [
   {
     id: "estandar",
     label: "Estándar Web",
-    description: "Equilibrada (16 chars). Ideal para la mayoría de cuentas.",
+    description: "Equilibrada (32 chars). Cantidad de caracteres considerables.",
     options: {
-      length: 16,
+      length: 32,
       useLower: true,
       useUpper: true,
       useNumbers: true,
@@ -46,10 +46,10 @@ const SECURITY_PRESETS = [
   },
   {
     id: "compatible",
-    label: "Compatible (Sin Símbolos)",
-    description: "Alfanumérica (16 chars). Para sitios que rechazan símbolos.",
+    label: "Sin símbolos",
+    description: "Alfanumérica (32 chars). Para sitios que rechazan símbolos.",
     options: {
-      length: 16,
+      length: 32,
       useLower: true,
       useUpper: true,
       useNumbers: true,
@@ -58,8 +58,8 @@ const SECURITY_PRESETS = [
   },
   {
     id: "pin",
-    label: "PIN Numérico",
-    description: "Solo números (6 dígitos). Para tarjetas o códigos de acceso.",
+    label: "PIN",
+    description: "Solo números (6 dígitos). Pines cortos y fáciles de recordar.",
     options: {
       length: 6,
       useLower: false,
